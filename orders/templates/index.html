@@ -1,0 +1,28 @@
+<h1>團購列表</h1>
+
+{% if user.is_authenticated %}
+    <p>歡迎 {{ user.username }}</p>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">登出</button>
+    </form>
+
+{% else %}
+    <a href="{% url 'login' %}">登入</a>
+    <a href="{% url 'register' %}">註冊</a>
+{% endif %}
+<hr>
+
+{% for g in groupbuys %}
+    <h3>
+        <a href="/groupbuy/{{ g.id }}/">
+            {{ g.title }}
+        </a>
+    </h3>
+    {% if user.is_staff %}
+    <a href="{% url 'delete_groupbuy' g.id %}">刪除團購</a>
+    {% endif %}
+{% empty %}
+    <p>目前沒有團購</p>
+{% endfor %}

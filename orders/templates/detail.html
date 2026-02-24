@@ -1,0 +1,73 @@
+<h1>{{ groupbuy.title }}</h1>
+
+<p>{{ groupbuy.description }}</p>
+<p>截止時間：{{ groupbuy.end_time }}</p>
+
+<hr>
+
+{% if user.is_authenticated %}
+<h2>我要訂購</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="item_name" placeholder="請輸入你要訂的品項">
+    <br><br>
+    <textarea name="note" placeholder="備註(套餐、餐具、訂購人姓名...)"></textarea>
+    <br><br>
+
+    {% if groupbuy.drink_mode %}
+        <input type="text" name="drink_name" placeholder="請輸入你要訂的飲料">
+
+        甜度：
+        <select name="sweetness">
+            <option>正常</option>
+            <option>少糖</option>
+            <option>半糖</option>
+            <option>微糖</option>
+            <option>無糖</option>
+        </select>
+
+        冰塊：
+        <select name="ice">
+            <option>正常</option>
+            <option>少冰</option>
+            <option>半冰</option>
+            <option>微冰</option>
+            <option>去冰</option>
+        </select>
+
+    {% endif %}
+
+    <br><br>
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            ...
+            <button type="submit">送出訂購</button>
+        </form>
+    {% else %}
+        <p>請先登入才能下單</p>
+        <a href="/login/">前往登入</a>
+    {% endif %}
+</form>
+{% endif %}
+
+<a href="/">回首頁</a>
+
+<h3>目前訂購紀錄</h3>
+
+{% for o in orders %}
+    <p>
+        {{ o.user.username }}:
+        {{ o.item_name }}
+        {{ o.note }}
+        {% if o.drink_name %} / {{ o.drink_name }}{% endif %}
+        {% if o.sweetness %} / 甜度{{ o.sweetness }}{% endif %}
+        {% if o.ice %} / 冰塊{{ o.ice }}{% endif %}
+    </p>
+    {% if user == o.user or user.is_staff %}
+    <a href="{% url 'delete_order' o.id %}">刪除</a>
+{% endif %}
+{% empty %}
+    <p>目前還沒有人訂</p>
+{% endfor %}

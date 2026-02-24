@@ -1,0 +1,11 @@
+<h2>建立團購</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="團購名稱">
+    <br><br>
+    飲料模式
+    <input type="checkbox" name="drink_mode">
+    <br><br>
+    <button type="submit">建立</button>
+</form>
