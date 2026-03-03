@@ -7,7 +7,6 @@
         {% csrf_token %}
         <button type="submit">登出</button>
     </form>
-
 {% else %}
     <a href="{% url 'login' %}">登入</a>
     <a href="{% url 'register' %}">註冊一般使用者</a>

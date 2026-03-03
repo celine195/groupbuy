@@ -2,7 +2,6 @@
 
 <p>{{ groupbuy.description }}</p>
 <p>建立時間：{{ groupbuy.start_time }}</p>
-
 <hr>
 
 {% if user.is_authenticated %}
@@ -45,9 +44,6 @@
             ...
             <button type="submit">送出訂購</button>
         </form>
-    {% else %}
-        <p>請先登入才能下單</p>
-        <a href="/login/">前往登入</a>
     {% endif %}
 </form>
 {% endif %}

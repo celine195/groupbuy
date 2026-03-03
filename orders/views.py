@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import GroupBuy, OrderRecord
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     groupbuys = GroupBuy.objects.all()
-
-    return render(request, 'index.html', {
-        'groupbuys': groupbuys
-    })
+    return render(request, 'index.html', {'groupbuys': groupbuys})
     
 def groupbuy_detail(request, id):
     groupbuy = GroupBuy.objects.get(id=id)
@@ -34,9 +36,6 @@ def groupbuy_detail(request, id):
         'orders': orders,
     })
 
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-
 @login_required
 def delete_order(request, order_id):
     order = get_object_or_404(OrderRecord, id=order_id)
@@ -59,22 +58,25 @@ def delete_groupbuy(request, id):
 
     return redirect('/')\
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
-
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('/')
-    else:
-        form = UserCreationForm()
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-    return render(request, 'register.html', {'form': form})
+        if User.objects.filter(username=username).exists():
+            return render(request, "register.html", {
+                "error": "這個帳號名稱已經被使用"
+            })
 
-from django.contrib.auth.decorators import login_required
+        User.objects.create_user(
+            username=username,
+            password=password
+        )
+
+        return redirect("/login/")
+
+    return render(request, "register.html")
+
 
 @login_required
 def create_groupbuy(request):
