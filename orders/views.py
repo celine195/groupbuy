@@ -3,11 +3,7 @@ from .models import GroupBuy, OrderRecord
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-
-    if request.user.is_authenticated:
-        groupbuys = GroupBuy.objects.filter(owner=request.user)
-    else:
-        groupbuys = GroupBuy.objects.all()
+    groupbuys = GroupBuy.objects.all()
 
     return render(request, 'index.html', {
         'groupbuys': groupbuys

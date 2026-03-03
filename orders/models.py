@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 #團購主題
 class GroupBuy(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="groupbuys")
     title = models.CharField(max_length=100)
     description = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     drink_mode = models.BooleanField(default=False)  # 飲料模式
 
     def __str__(self):
